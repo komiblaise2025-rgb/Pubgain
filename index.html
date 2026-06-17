@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PubGain - Parrainage</title>
+    <title>PubGain</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #0b0b12;
+            background-color: #0b0b12; /* Fond sombre assorti à l'application */
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
@@ -26,10 +26,10 @@
             padding: 10px;
         }
 
-        /* Bouton Smartlink */
+        /* 1. ZONE UNIQUE PUBLICITAIRE (Votre Smartlink) */
         .smartlink-container {
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .ad-button {
@@ -39,12 +39,18 @@
             text-decoration: none;
             font-weight: bold;
             text-align: center;
-            padding: 12px;
+            padding: 14px;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4);
+            font-size: 14px;
+            transition: transform 0.2s;
         }
 
-        /* ZONE DE PARRAINAGE PROFESSIONNELLE */
+        .ad-button:active {
+            transform: scale(0.98);
+        }
+
+        /* 2. ZONE DE PARRAINAGE EXCLUSIVE */
         .referral-card {
             width: 100%;
             background: linear-gradient(135deg, #1e1e30, #161622);
@@ -128,7 +134,7 @@
             color: #00ffcc;
         }
 
-        /* Application JotForm */
+        /* 3. APPLICATION PUBGAIN (JotForm) */
         .app-container {
             width: 100%;
             flex-grow: 1;
@@ -136,7 +142,7 @@
 
         iframe {
             width: 100%;
-            height: 60vh;
+            height: 65vh; /* Hauteur ajustée parfaitement */
             border: none;
         }
     </style>
@@ -145,14 +151,12 @@
 
     <div class="container">
 
-        <!-- PUB SMARTLINK -->
         <div class="smartlink-container">
             <a href="https://landslidegraphsystems.com/xfm6wh1g?key=02d9c6083bf9c5d2ce191a4137681d41" target="_blank" class="ad-button">
-                🚀 CLIQUEZ ICI POUR GAGNER DES POINTS BONUS !
+                🚀 CLIQUEZ ICI POUR GAGNER DES POINTS !
             </a>
         </div>
 
-        <!-- ZONE DE PARRAINAGE ACTIVED -->
         <div class="referral-card">
             <div class="referral-header">
                 <p class="referral-title">👥 Votre lien de parrainage</p>
@@ -160,7 +164,7 @@
             </div>
             
             <div class="referral-box">
-                <div class="referral-url" id="referralAddress">Connexion requise...</div>
+                <div class="referral-url" id="referralAddress">Génération du lien...</div>
                 <button class="btn-copy" onclick="copyReferralLink()">Copier</button>
             </div>
 
@@ -170,7 +174,6 @@
             </div>
         </div>
 
-        <!-- APPLICATION PUBGAIN -->
         <div class="app-container">
             <iframe id="JotFormIFrame-261666680945571" title="PubGain" allow="geolocation; microphone; camera" src="https://www.jotform.com/app/261666680945571?appEmbedded=1"></iframe>
         </div>
@@ -178,32 +181,26 @@
     </div>
 
     <script>
-        // 1. Détection automatique du parrain dans l'URL (si un filleul arrive)
+        // Détection du parrain dans l'URL si un invité arrive
         const urlParams = new URLSearchParams(window.location.search);
         const codeParrain = urlParams.get('ref');
-        
         if (codeParrain) {
-            console.log("Cet utilisateur a été invité par le parrain ID :", codeParrain);
-            // Stocke temporairement l'ID du parrain dans la session pour l'enregistrement
             sessionStorage.setItem('parrainID', codeParrain);
         }
 
-        // 2. Génération du lien de l'utilisateur connecté (Simulé ici, à l'authentification Firebase)
-        // Remplacer 'USER_FIREBASE_ID' par la vraie variable d'ID de l'utilisateur connecté
+        // Génère le lien dynamique de l'utilisateur connecté
         function initialiserZoneParrainage(userIdFirebase) {
             const baseUrl = window.location.href.split('?')[0];
             const lienComplet = baseUrl + "?ref=" + userIdFirebase;
             document.getElementById('referralAddress').innerText = lienComplet;
         }
 
-        // Exemple de test automatique (simule un utilisateur connecté avec un ID unique)
+        // Système automatique temporaire (A lier ensuite à votre ID Firebase de l'utilisateur)
         initialiserZoneParrainage("USR" + Math.floor(100000 + Math.random() * 900000));
 
-        // Fonction Copier
+        // Gestion du bouton Copier
         function copyReferralLink() {
             const textToCopy = document.getElementById('referralAddress').innerText;
-            if(textToCopy.includes("Connexion requise")) return;
-
             navigator.clipboard.writeText(textToCopy).then(() => {
                 const btn = document.querySelector('.btn-copy');
                 btn.innerText = "Copié !";
