@@ -1,13 +1,222 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>PubGain</title>
-  </head>
-  <body>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PubGain - Parrainage</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b0b12;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    <iframe id="JotFormIFrame-261666680945571" title="PubGain" allow="geolocation; microphone; camera" src="https://www.jotform.com/app/261666680945571?appEmbedded=1" style="height:100vh; width:100%; max-width:450px; border: 0; display: block; margin: 0 auto;"></iframe>
+        .container {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 10px;
+        }
 
-  </body>
+        /* Bouton Smartlink */
+        .smartlink-container {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .ad-button {
+            display: block;
+            background: linear-gradient(90deg, #ff007f, #7f00ff);
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4);
+        }
+
+        /* ZONE DE PARRAINAGE PROFESSIONNELLE */
+        .referral-card {
+            width: 100%;
+            background: linear-gradient(135deg, #1e1e30, #161622);
+            border: 1px solid #3a3a50;
+            border-radius: 12px;
+            padding: 15px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .referral-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .referral-title {
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .points-badge {
+            background-color: #00ffcc;
+            color: #0b0b12;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .referral-box {
+            display: flex;
+            background-color: #0b0b12;
+            border: 1px solid #2a2a3a;
+            border-radius: 6px;
+            padding: 4px;
+            align-items: center;
+        }
+
+        .referral-url {
+            flex-grow: 1;
+            color: #b5b5c3;
+            font-size: 12px;
+            padding: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .btn-copy {
+            background-color: #7f00ff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-copy:hover {
+            background-color: #6600cc;
+        }
+
+        .referral-stats {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #2a2a3a;
+            padding-top: 10px;
+            font-size: 12px;
+            color: #a0a0b5;
+        }
+
+        .stat-item strong {
+            color: #00ffcc;
+        }
+
+        /* Application JotForm */
+        .app-container {
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        iframe {
+            width: 100%;
+            height: 60vh;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- PUB SMARTLINK -->
+        <div class="smartlink-container">
+            <a href="https://landslidegraphsystems.com/xfm6wh1g?key=02d9c6083bf9c5d2ce191a4137681d41" target="_blank" class="ad-button">
+                🚀 CLIQUEZ ICI POUR GAGNER DES POINTS BONUS !
+            </a>
+        </div>
+
+        <!-- ZONE DE PARRAINAGE ACTIVED -->
+        <div class="referral-card">
+            <div class="referral-header">
+                <p class="referral-title">👥 Votre lien de parrainage</p>
+                <span class="points-badge">+500 Pts / Filleul</span>
+            </div>
+            
+            <div class="referral-box">
+                <div class="referral-url" id="referralAddress">Connexion requise...</div>
+                <button class="btn-copy" onclick="copyReferralLink()">Copier</button>
+            </div>
+
+            <div class="referral-stats">
+                <div class="stat-item">Filleuls : <strong id="totalFilleuls">0</strong></div>
+                <div class="stat-item">Gains Parrainage : <strong id="gainParrainage">0 Pts</strong></div>
+            </div>
+        </div>
+
+        <!-- APPLICATION PUBGAIN -->
+        <div class="app-container">
+            <iframe id="JotFormIFrame-261666680945571" title="PubGain" allow="geolocation; microphone; camera" src="https://www.jotform.com/app/261666680945571?appEmbedded=1"></iframe>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. Détection automatique du parrain dans l'URL (si un filleul arrive)
+        const urlParams = new URLSearchParams(window.location.search);
+        const codeParrain = urlParams.get('ref');
+        
+        if (codeParrain) {
+            console.log("Cet utilisateur a été invité par le parrain ID :", codeParrain);
+            // Stocke temporairement l'ID du parrain dans la session pour l'enregistrement
+            sessionStorage.setItem('parrainID', codeParrain);
+        }
+
+        // 2. Génération du lien de l'utilisateur connecté (Simulé ici, à l'authentification Firebase)
+        // Remplacer 'USER_FIREBASE_ID' par la vraie variable d'ID de l'utilisateur connecté
+        function initialiserZoneParrainage(userIdFirebase) {
+            const baseUrl = window.location.href.split('?')[0];
+            const lienComplet = baseUrl + "?ref=" + userIdFirebase;
+            document.getElementById('referralAddress').innerText = lienComplet;
+        }
+
+        // Exemple de test automatique (simule un utilisateur connecté avec un ID unique)
+        initialiserZoneParrainage("USR" + Math.floor(100000 + Math.random() * 900000));
+
+        // Fonction Copier
+        function copyReferralLink() {
+            const textToCopy = document.getElementById('referralAddress').innerText;
+            if(textToCopy.includes("Connexion requise")) return;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const btn = document.querySelector('.btn-copy');
+                btn.innerText = "Copié !";
+                btn.style.backgroundColor = "#00ffcc";
+                btn.style.color = "#0b0b12";
+                setTimeout(() => {
+                    btn.innerText = "Copier";
+                    btn.style.backgroundColor = "#7f00ff";
+                    btn.style.color = "white";
+                }, 2000);
+            });
+        }
+    </script>
+
+</body>
 </html>
